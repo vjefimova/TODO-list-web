@@ -1,4 +1,6 @@
-<?php?>
+<?php
+require('conf.php');
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,32 +45,27 @@
                                         </thead>
                                         <tbody>
                                         <tr class="fw-normal">
-                                            <th>
-                                                <span class="ms-2">Õppeaine</span>
-                                            </th>
-                                            <td class="align-middle">
-                                                <span >task</span >
-                                            </td>
-                                            <td class="align-middle">
-                                                info
-                                            </td>
-                                            <td class="align-middle">
-                                                <h6 class="mb-0"><span class="badge bg-danger">14.02.2022</span></h6>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="#!" data-mdb-toggle="tooltip" title="Edit">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="#A7FFEB" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                                                    </svg>
-                                                </a>
-                                                <a href="#!" data-mdb-toggle="tooltip" title="Remove">
-                                                    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="#F44336" xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
-                                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
-                                                    </svg>
-                                                </a>
-                                            </td>
+                                            <?php
+                                                $kask=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task, user FROM taskid");
+                                                $kask->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task, $user);
+                                                $kask->execute();
+                                                while($kask->fetch()){
+
+                                                    echo "<th><span class='ms-2'>".$oppeaine."</span></th>";
+                                                    echo "<td class='align-middle'><span>".htmlspecialchars($tooliik)."</span></td>";
+                                                    echo "<td class='align-middle'>".htmlspecialchars($task)."</td>";
+                                                    echo "<td class='align-middle'><h6 class='mb-0'><span class='badge bg-danger'>".htmlspecialchars($tahtaeg)."</span></h6></td>";
+
+                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?kustuta=$id' data-mdb-toggle='tooltip' title='Remove'><svg width='2em' height='2em' viewBox='0 0 16 16' class='bi bi-x-circle' fill='#F44336' xmlns='http://www.w3.org/2000/svg'>
+                                                    <path fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z'/>
+                                                        <path fill-rule='evenodd' d='M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z'/>
+                                                        <path fill-rule='evenodd' d='M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z'/>
+                                                    </svg></a></td>";
+                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?muutmine=$id' data-mdb-toggle='tooltip' title='Edit'><svg xmlns='http://www.w3.org/2000/svg' width='2em' height='2em' fill='#A7FFEB' class='bi bi-pencil' viewBox='0 0 16 16'>
+                                                        <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'/>
+                                                    </svg></a></td>";
+                                                }
+                                                ?>
                                         </tr>
                                         </tbody>
                                     </table>
