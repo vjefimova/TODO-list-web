@@ -8,6 +8,13 @@ if(isset($_REQUEST["Add"])) {
     header("Location: $_SERVER[PHP_SELF]");
     $yhendus->close();
 }
+
+if(isset($_REQUEST["Delete"])) {
+    $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=?");
+    $kask->bind_param("i", $_REQUEST["Delete"]);
+    $kask->execute();
+    header("Location: $_SERVER[PHP_SELF]");
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -65,7 +72,7 @@ if(isset($_REQUEST["Add"])) {
                                                     echo "<td class='align-middle'>".htmlspecialchars($task)."</td>";
                                                     echo "<td class='align-middle'><h6 class='mb-0'><span class='badge bg-danger'>".htmlspecialchars($tahtaeg)."</span></h6></td>";
 
-                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?kustuta=$id' data-mdb-toggle='tooltip' title='Remove'><svg width='2em' height='2em' viewBox='0 0 16 16' class='bi bi-x-circle' fill='#F44336' xmlns='http://www.w3.org/2000/svg'>
+                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?Delete=$id' data-mdb-toggle='tooltip' title='Remove'><svg width='2em' height='2em' viewBox='0 0 16 16' class='bi bi-x-circle' fill='#F44336' xmlns='http://www.w3.org/2000/svg'>
                                                     <path fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z'/>
                                                         <path fill-rule='evenodd' d='M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z'/>
                                                         <path fill-rule='evenodd' d='M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z'/>
