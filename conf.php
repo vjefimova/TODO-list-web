@@ -2,7 +2,7 @@
 $servernimi = "localhost";
 $kasutajanimi = "root";
 $parool = "";
-$andmebaas = "todolist";
+$andmebaas = "tasks";
 $yhendus = new mysqli($servernimi, $kasutajanimi, $parool, $andmebaas);
 $yhendus->set_charset('UTF8');
 ?>

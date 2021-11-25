@@ -1,5 +1,13 @@
 <?php
 require('conf.php');
+
+if(isset($_REQUEST["Add"])) {
+    $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task) VALUES (?,?,?,?)");
+    $data->bind_param("ssss", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["task"]);
+    $data->execute();
+    header("Location: $_SERVER[PHP_SELF]");
+    $yhendus->close();
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -11,7 +19,7 @@ require('conf.php');
     <link rel="stylesheet" href="css/style.css">
     <script src="js/app.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Document</title>
+    <title>TODO-list</title>
 </head>
 <body>
 <section class="vh-100 gradient-custom-2">
@@ -44,12 +52,13 @@ require('conf.php');
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="fw-normal">
                                             <?php
-                                                $kask=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task, user FROM taskid");
-                                                $kask->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task, $user);
-                                                $kask->execute();
-                                                while($kask->fetch()){
+                                                $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid");
+                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
+                                                $data->execute();
+                                                while($data->fetch()){
+
+                                                    echo "<tr class='fw-normal'>";
 
                                                     echo "<th><span class='ms-2'>".$oppeaine."</span></th>";
                                                     echo "<td class='align-middle'><span>".htmlspecialchars($tooliik)."</span></td>";
@@ -64,21 +73,22 @@ require('conf.php');
                                                     echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?muutmine=$id' data-mdb-toggle='tooltip' title='Edit'><svg xmlns='http://www.w3.org/2000/svg' width='2em' height='2em' fill='#A7FFEB' class='bi bi-pencil' viewBox='0 0 16 16'>
                                                         <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'/>
                                                     </svg></a></td>";
+
+                                                    echo "</tr>";
                                                 }
                                                 ?>
-                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="block">
                                     <form class="">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Task</label>
-                                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="task">
+                                            <label for="Input1">Task</label>
+                                            <input type="text" class="form-control" id="Input1" placeholder="task" name="task">
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlSelect1">Õppeaine</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
+                                            <label for="Select1">Õppeaine</label>
+                                            <select class="form-control" id="Select1" name="oppeaine">
                                                 <option>Multimeedia</option>
                                                 <option>Programeerimine</option>
                                                 <option>Kontoritarkvara</option>
@@ -87,17 +97,17 @@ require('conf.php');
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Info</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Info"></textarea>
+                                            <label for="Textarea1">Info</label>
+                                            <textarea class="form-control" id="Textarea1" rows="3" placeholder="Info" name="tooliik"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Tähtaeg</label>
+                                            <label for="Textarea1">Tähtaeg</label>
                                             <div>
-                                                <input type="date">
+                                                <input type="date" name="tahtaeg">
                                             </div>
                                         </div>
                                         <div class="form-group pt-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <input type="submit" value="Add">
+                                            <input type="submit" value="Add" name="Add">
                                         </div>
                                     </form>
                                 </div>
