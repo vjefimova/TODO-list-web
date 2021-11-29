@@ -15,6 +15,14 @@ if(isset($_REQUEST["Delete"])) {
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
+
+if(isset($_REQUEST["edit"])) {
+    $kask = $yhendus->prepare("UPDATE taskid SET tahtaeg=?, oppeaine=?, tooliik=?, task=? WHERE id=?");
+    $kask->bind_param("ssssi", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["info"], $_REQUEST["idEdit"]);
+    $kask->execute();
+    header("Location: $_SERVER[PHP_SELF]");
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -33,10 +41,8 @@ if(isset($_REQUEST["Delete"])) {
     <div class="container  py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-15 col-xl-14">
-
                 <div class="mask-custom">
                     <div class="card-body p-4 text-white" >
-
                         <div class="text-center pt-3 pb-2">
                             <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-todo-list/check1.png" alt="Check" width="60">
                             <h2 class="my-4">TODO list</h2>
@@ -44,7 +50,6 @@ if(isset($_REQUEST["Delete"])) {
                         <div class="container searchCont col-md-10 ">
                              <div class="search "> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> <button class="btn btn-primary">Search</button> </div>
                         </div>
-
                         <div class="container">
                             <div class="d-flex flex-row justify-content-between">
                                 <div class="block col-md-9">
@@ -77,18 +82,56 @@ if(isset($_REQUEST["Delete"])) {
                                                         <path fill-rule='evenodd' d='M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z'/>
                                                         <path fill-rule='evenodd' d='M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z'/>
                                                     </svg></a></td>";
-                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?muutmine=$id' data-mdb-toggle='tooltip' title='Edit'><svg xmlns='http://www.w3.org/2000/svg' width='2em' height='2em' fill='#A7FFEB' class='bi bi-pencil' viewBox='0 0 16 16'>
+                                                    echo"<td class='align-middle'><a href='$_SERVER[PHP_SELF]?Editform=$id' data-mdb-toggle='tooltip' title='Edit'><svg xmlns='http://www.w3.org/2000/svg' width='2em' height='2em' fill='#A7FFEB' class='bi bi-pencil' viewBox='0 0 16 16'>
                                                         <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'/>
                                                     </svg></a></td>";
 
                                                     echo "</tr>";
+
+                                                    if (isset($_REQUEST["Editform"])){
+                                                        echo "<div class='container'>
+                                                                 <form action='$_SERVER[PHP_SELF]'>
+                                                                    <div class='row'>
+                                                                    <input type='hidden' name='idEdit' value='$id'>
+                                                                        <div class='form-group col-sm-3'>
+                                                                            <label for='Select1'>Õppeaine</label>
+                                                                            <select class='form-control' id='Select1' name='oppeaine'>
+                                                                                <option>Multimeedia</option>
+                                                                                <option>Programeerimine</option>
+                                                                                <option>Kontoritarkvara</option>
+                                                                                <option>Rakendus testimine</option>
+                                                                                <option>Koolieksam</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class='form-group col-sm'>
+                                                                            <label for='tooliik'>Task:</label>
+                                                                            <input type='text' name='tooliik'>
+                                                                        </div>
+                                                                        <div class='form-group col-sm'>
+                                                                            <label for='info'>Info:</label>
+                                                                            <input type='text' name='info'>
+                                                                        </div>
+                                                                        <div class='form-group col-sm'>
+                                                                            <label for='tahtaeg'>Tähtaeg:</label>
+                                                                            <input type='date' name='tahtaeg'>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class='row'>
+                                                                       <div class='pt-3'>
+                                                                          <input class='btn btn-light' type='submit' name='edit' value='Edit'>
+                                                                       </div>
+                                                                    </div>
+                                                                 </form>
+                                                              </div>
+                                                        ";
+                                                    }
                                                 }
                                                 ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="block">
-                                    <form class="">
+                                    <form>
                                         <div class="form-group">
                                             <label for="Input1">Task</label>
                                             <input type="text" class="form-control" id="Input1" placeholder="task" name="task">
@@ -114,7 +157,7 @@ if(isset($_REQUEST["Delete"])) {
                                             </div>
                                         </div>
                                         <div class="form-group pt-3 d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <input type="submit" value="Add" name="Add">
+                                            <input class="btn btn-light" type="submit" value="Add" name="Add">
                                         </div>
                                     </form>
                                 </div>
