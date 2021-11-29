@@ -23,6 +23,16 @@ if(isset($_REQUEST["edit"])) {
     header("Location: $_SERVER[PHP_SELF]");
 }
 
+if(isset($_REQUEST["search"])) {
+    $input= $_REQUEST["inputsearch"];
+    $sql="select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%'";
+
+    $res=$yhendus->query($sql);
+    while($row=$res->fetch_assoc()){
+        echo 'toolik:  '.$row["tooliik"];
+    }
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -48,7 +58,12 @@ if(isset($_REQUEST["edit"])) {
                             <h2 class="my-4">TODO list</h2>
                         </div>
                         <div class="container searchCont col-md-10 ">
-                             <div class="search "> <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search"> <button class="btn btn-primary">Search</button> </div>
+                             <div class="search "> <i class="fa fa-search"></i>
+                                 <form action="">
+                                     <input type="text" class="form-control" placeholder="Search" name="inputsearch">
+                                     <button type="submit" class="btn btn-primary" name="search">Search</button>
+                                 </form>
+                             </div>
                         </div>
                         <div class="container">
                             <div class="d-flex flex-row justify-content-between">
@@ -65,9 +80,17 @@ if(isset($_REQUEST["edit"])) {
                                         </thead>
                                         <tbody>
                                             <?php
+                                            if(isset($_REQUEST["search"])) {
+                                                $input= $_REQUEST["inputsearch"];
+                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
+                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
+                                                $data->execute();
+                                            }
+                                            else{
                                                 $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid");
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
+                                            }
                                                 while($data->fetch()){
 
                                                     echo "<tr class='fw-normal'>";
