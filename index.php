@@ -1,5 +1,11 @@
 <?php
 require('conf.php');
+if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    header('WWW-Authenticate: Basic realm="My Realm"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'Text to send if user hits Cancel button';
+    exit;
+} 
 
 if(isset($_REQUEST["Add"])) {
     $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task) VALUES (?,?,?,?)");
@@ -43,6 +49,7 @@ if(isset($_REQUEST["edit"])) {
             <div class="col-md-15 col-xl-14">
                 <div class="mask-custom">
                     <div class="card-body p-4 text-white" >
+                        <a href="logout.php" class="btn btn-dark" title="Logout">Logout</a>
                         <div class="text-center pt-3 pb-2">
                             <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-todo-list/check1.png" alt="Check" width="60">
                             <h2 class="my-4">TODO list</h2>
