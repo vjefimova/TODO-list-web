@@ -23,15 +23,6 @@ if(isset($_REQUEST["edit"])) {
     header("Location: $_SERVER[PHP_SELF]");
 }
 
-if(isset($_REQUEST["search"])) {
-    $input= $_REQUEST["inputsearch"];
-    $sql="select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%'";
-
-    $res=$yhendus->query($sql);
-    while($row=$res->fetch_assoc()){
-        echo 'toolik:  '.$row["tooliik"];
-    }
-}
 
 ?>
 <!doctype html>
