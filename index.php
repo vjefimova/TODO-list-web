@@ -77,43 +77,32 @@ if (empty($_SESSION["user"])){
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if(isset($_REQUEST["inputsearch"])) {
-                                                $input= $_REQUEST["inputsearch"];
-                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
-                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
-                                                $data->execute();
-                                            }
-                                            else{
-                                                $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid");
-                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
-                                                $data->execute();
-                                            }
                                             if (isset($_REQUEST["Editform"])){
+                                                $dat=$yhendus->prepare("SELECT tahtaeg, oppeaine, tooliik, task FROM taskid WHERE id = ?");
+                                                $dat->bind_param("i", $_REQUEST['Editform']);
+                                                $dat->bind_result($tahtaeg, $oppeaine, $tooliik, $task);
+                                                $dat->execute();
+                                                $dat->fetch();
+                                                $dat->close();
                                                 echo "<div class='container'>
                                                                  <form action='$_SERVER[PHP_SELF]'>
                                                                     <div class='row'>
-                                                                    <input type='hidden' name='idEdit' value='$id'>
+                                                                    <input type='hidden' name='idEdit' value=''>
                                                                         <div class='form-group col-sm-3'>
-                                                                            <label for='Select1'>Õppeaine</label>
-                                                                            <select class='form-control' id='Select1' name='oppeaine'>
-                                                                                <option>Multimeedia</option>
-                                                                                <option>Programeerimine</option>
-                                                                                <option>Kontoritarkvara</option>
-                                                                                <option>Rakendus testimine</option>
-                                                                                <option>Koolieksam</option>
-                                                                            </select>
+                                                                            <label for='oppeaine'>Õppeaine</label>
+                                                                            <input type='text' name='oppeaine' value=$oppeaine>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
                                                                             <label for='tooliik'>Task:</label>
-                                                                            <input type='text' name='tooliik'>
+                                                                            <input type='text' name='tooliik' value=$tooliik>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
                                                                             <label for='info'>Info:</label>
-                                                                            <input type='text' name='info'>
+                                                                            <input type='text' name='info' value=$task>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
                                                                             <label for='tahtaeg'>Tähtaeg:</label>
-                                                                            <input type='date' name='tahtaeg'>
+                                                                            <input type='date' name='tahtaeg' value=$tahtaeg>
                                                                         </div>
                                                                     </div>
                                                                     <div class='row'>
@@ -124,6 +113,17 @@ if (empty($_SESSION["user"])){
                                                                  </form>
                                                               </div>
                                                         ";
+                                            }
+                                            if(isset($_REQUEST["inputsearch"])) {
+                                                $input= $_REQUEST["inputsearch"];
+                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
+                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
+                                                $data->execute();
+                                            }
+                                            else{
+                                                $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid");
+                                                $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
+                                                $data->execute();
                                             }
                                                 while($data->fetch()){
 
