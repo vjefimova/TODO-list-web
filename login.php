@@ -1,6 +1,5 @@
 <?php
 require('conf.php');
-session_start();
 if(isset($_SESSION['log'])){
     header('Location:index.php');
     exit();
@@ -13,7 +12,8 @@ if(isset($_POST['login'])){
         $data = mysqli_fetch_assoc($query);
 
         if($data['password'] === $pass)
-            {
+            {   session_start();
+                $_SESSION["user"] = $_POST['email'];
                 $_SESSION['log'] = 'misiganes';
                 header('Location:index.php');
             }

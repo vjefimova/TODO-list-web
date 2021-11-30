@@ -6,6 +6,7 @@ if (!isset($_SESSION['log'])) {
 }
 if(isset($_POST['logout'])){
     session_destroy();
+    unset($_SESSION["user"]);
     header('Location: login.php');
     exit();
 }

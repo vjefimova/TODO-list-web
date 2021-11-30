@@ -1,11 +1,5 @@
 <?php
 require('conf.php');
-/*if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="My Realm"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'Text to send if user hits Cancel button';
-    exit;
-} */
 
 if(isset($_REQUEST["Add"])) {
     $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task) VALUES (?,?,?,?)");
@@ -29,7 +23,6 @@ if(isset($_REQUEST["edit"])) {
     header("Location: $_SERVER[PHP_SELF]");
 }
 
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -49,6 +42,7 @@ if(isset($_REQUEST["edit"])) {
             <div class="col-md-15 col-xl-14">
                 <div class="mask-custom">
                     <div class="card-body p-4 text-white" >
+                        <p>Hello <?php session_start(); echo  $_SESSION["user"] ?>!</p>
                         <form action="logout.php" method="post">
                             <input type="submit" class="btn btn-dark" value="Logi valja" name="logout">
                         </form>
@@ -60,7 +54,7 @@ if(isset($_REQUEST["edit"])) {
                              <div class="search "> <i class="fa fa-search"></i>
                                  <form action="">
                                      <input type="text" class="form-control" placeholder="Search" name="inputsearch">
-                                     <button type="submit" class="btn btn-primary" name="search">Search</button>
+                                     <button type="submit" class="btn btn-primary">Search</button>
                                  </form>
                              </div>
                         </div>
@@ -79,7 +73,7 @@ if(isset($_REQUEST["edit"])) {
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if(isset($_REQUEST["search"])) {
+                                            if(isset($_REQUEST["inputsearch"])) {
                                                 $input= $_REQUEST["inputsearch"];
                                                 $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
