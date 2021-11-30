@@ -8,11 +8,12 @@ if(isset($_POST['login'])){
     if(!empty($_POST['email']) && !empty($_POST['pass'])){
         $pass = $_POST['pass'];
 
-        $query = mysqli_query($yhendus,"SELECT user_id, password FROM users WHERE emaile='".mysqli_real_escape_string($yhendus,$_POST['email'])."' LIMIT 1");
+        $query = mysqli_query($yhendus,"SELECT * FROM users WHERE emaile='".mysqli_real_escape_string($yhendus,$_POST['email'])."' LIMIT 1");
         $data = mysqli_fetch_assoc($query);
 
         if($data['password'] === $pass)
             {   session_start();
+                $_SESSION["user_name"] = $data['emaile'];
                 $_SESSION["user"] = $data['user_id'];
                 $_SESSION['log'] = 'misiganes';
                 header('Location:index.php');

@@ -23,15 +23,15 @@ if(isset($_REQUEST["Add"])) {
 }
 
 if(isset($_REQUEST["Delete"])) {
-    $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=? and user = ?");
-    $kask->bind_param("is", $_REQUEST["Delete"], $user);
+    $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=?");
+    $kask->bind_param("i", $_REQUEST["Delete"], $user);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
 
 if(isset($_REQUEST["edit"])) {
-    $kask = $yhendus->prepare("UPDATE taskid SET tahtaeg=?, oppeaine=?, tooliik=?, task=? WHERE id=? and user = ?");
-    $kask->bind_param("ssssis", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["info"], $_REQUEST["idEdit"], $user);
+    $kask = $yhendus->prepare("UPDATE taskid SET tahtaeg=?, oppeaine=?, tooliik=?, task=? WHERE id=?");
+    $kask->bind_param("ssssi", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["info"], $_REQUEST["idEdit"]);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
@@ -56,7 +56,7 @@ if(isset($_REQUEST["edit"])) {
             <div class="col-md-15 col-xl-14">
                 <div class="mask-custom">
                     <div class="card-body p-4 text-white" >
-                        <p>Hello <?php echo  $_SESSION["user"] ?>!</p>
+                        <p>Hello <?php echo  $_SESSION["user_name"] ?>!</p>
                         <form action="logout.php" method="post">
                             <input type="submit" class="btn btn-dark" value="Logi valja" name="logout">
                         </form>
@@ -88,16 +88,16 @@ if(isset($_REQUEST["edit"])) {
                                         <tbody>
                                             <?php
                                             if (isset($_REQUEST["Editform"])){
-                                                $dat=$yhendus->prepare("SELECT tahtaeg, oppeaine, tooliik, task FROM taskid WHERE id = ? and user = ?");
-                                                $dat->bind_param("is", $_REQUEST['Editform'], $user);
-                                                $dat->bind_result($tahtaeg, $oppeaine, $tooliik, $task);
+                                                $dat=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid WHERE id = ?");
+                                                $dat->bind_param("i", $_REQUEST['Editform']);
+                                                $dat->bind_result($id,$tahtaeg, $oppeaine, $tooliik, $task);
                                                 $dat->execute();
                                                 $dat->fetch();
                                                 $dat->close();
                                                 echo "<div class='container'>
                                                                  <form action='$_SERVER[PHP_SELF]'>
                                                                     <div class='row'>
-                                                                    <input type='hidden' name='idEdit' value=''>
+                                                                    <input type='hidden' name='idEdit' value='$id'>
                                                                         <div class='form-group col-sm-3'>
                                                                             <label for='oppeaine'>Õppeaine</label>
                                                                             <input type='text' name='oppeaine' value=$oppeaine>
@@ -126,14 +126,13 @@ if(isset($_REQUEST["edit"])) {
                                             }
                                             if(isset($_REQUEST["inputsearch"])) {
                                                 $input= $_REQUEST["inputsearch"];
-                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where user = ? and tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
-                                                $data->bind_param("s", $user);
+                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%' and user = $user");
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
                                             }
                                             else{
                                                 $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid WHERE user = ?");
-                                                $data->bind_param("s", $user);
+                                                $data->bind_param("i", $user);
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
                                             }
