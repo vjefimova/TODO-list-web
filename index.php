@@ -22,6 +22,10 @@ if(isset($_REQUEST["edit"])) {
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
+session_start();
+if (empty($_SESSION["user"])){
+    header("Location: login.php");
+}
 
 ?>
 <!doctype html>
@@ -42,7 +46,7 @@ if(isset($_REQUEST["edit"])) {
             <div class="col-md-15 col-xl-14">
                 <div class="mask-custom">
                     <div class="card-body p-4 text-white" >
-                        <p>Hello <?php session_start(); echo  $_SESSION["user"] ?>!</p>
+                        <p>Hello <?php echo  $_SESSION["user"] ?>!</p>
                         <form action="logout.php" method="post">
                             <input type="submit" class="btn btn-dark" value="Logi valja" name="logout">
                         </form>
