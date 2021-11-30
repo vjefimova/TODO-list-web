@@ -1,6 +1,12 @@
 <?php
 require('conf.php');
 
+$searchvalue = "";
+
+if (isset($_REQUEST["inputsearch"])){
+    $searchvalue = $_REQUEST["inputsearch"];
+}
+
 if(isset($_REQUEST["Add"])) {
     $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task) VALUES (?,?,?,?)");
     $data->bind_param("ssss", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["task"]);
@@ -57,7 +63,7 @@ if (empty($_SESSION["user"])){
                         <div class="container searchCont col-md-10 ">
                              <div class="search "> <i class="fa fa-search"></i>
                                  <form action="">
-                                     <input type="text" class="form-control" placeholder="Search" name="inputsearch">
+                                     <input type="text" class="form-control" placeholder="Search" name="inputsearch" value="<?php echo $searchvalue;?>">
                                      <button type="submit" class="btn btn-primary">Search</button>
                                  </form>
                              </div>
