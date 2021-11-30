@@ -7,31 +7,35 @@ if (isset($_REQUEST["inputsearch"])){
     $searchvalue = $_REQUEST["inputsearch"];
 }
 
+session_start();
+if (empty($_SESSION["user"])){
+    header("Location: login.php");
+}
+else
+    $user = $_SESSION["user"];
+
 if(isset($_REQUEST["Add"])) {
-    $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task) VALUES (?,?,?,?)");
-    $data->bind_param("ssss", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["task"]);
+    $data = $yhendus->prepare("INSERT INTO taskid(tahtaeg, oppeaine, tooliik, task, user) VALUES (?,?,?,?,?)");
+    $data->bind_param("ssssi", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["task"], $user);
     $data->execute();
     header("Location: $_SERVER[PHP_SELF]");
     $yhendus->close();
 }
 
 if(isset($_REQUEST["Delete"])) {
-    $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=?");
-    $kask->bind_param("i", $_REQUEST["Delete"]);
+    $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=? and user = ?");
+    $kask->bind_param("is", $_REQUEST["Delete"], $user);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
 
 if(isset($_REQUEST["edit"])) {
-    $kask = $yhendus->prepare("UPDATE taskid SET tahtaeg=?, oppeaine=?, tooliik=?, task=? WHERE id=?");
-    $kask->bind_param("ssssi", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["info"], $_REQUEST["idEdit"]);
+    $kask = $yhendus->prepare("UPDATE taskid SET tahtaeg=?, oppeaine=?, tooliik=?, task=? WHERE id=? and user = ?");
+    $kask->bind_param("ssssis", $_REQUEST["tahtaeg"], $_REQUEST["oppeaine"], $_REQUEST["tooliik"], $_REQUEST["info"], $_REQUEST["idEdit"], $user);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
-session_start();
-if (empty($_SESSION["user"])){
-    header("Location: login.php");
-}
+
 
 ?>
 <!doctype html>
@@ -84,8 +88,8 @@ if (empty($_SESSION["user"])){
                                         <tbody>
                                             <?php
                                             if (isset($_REQUEST["Editform"])){
-                                                $dat=$yhendus->prepare("SELECT tahtaeg, oppeaine, tooliik, task FROM taskid WHERE id = ?");
-                                                $dat->bind_param("i", $_REQUEST['Editform']);
+                                                $dat=$yhendus->prepare("SELECT tahtaeg, oppeaine, tooliik, task FROM taskid WHERE id = ? and user = ?");
+                                                $dat->bind_param("is", $_REQUEST['Editform'], $user);
                                                 $dat->bind_result($tahtaeg, $oppeaine, $tooliik, $task);
                                                 $dat->execute();
                                                 $dat->fetch();
@@ -122,12 +126,14 @@ if (empty($_SESSION["user"])){
                                             }
                                             if(isset($_REQUEST["inputsearch"])) {
                                                 $input= $_REQUEST["inputsearch"];
-                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
+                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where user = ? and tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%'");
+                                                $data->bind_param("s", $user);
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
                                             }
                                             else{
-                                                $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid");
+                                                $data=$yhendus->prepare("SELECT id, tahtaeg, oppeaine, tooliik, task FROM taskid WHERE user = ?");
+                                                $data->bind_param("s", $user);
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
                                             }

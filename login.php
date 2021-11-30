@@ -13,7 +13,7 @@ if(isset($_POST['login'])){
 
         if($data['password'] === $pass)
             {   session_start();
-                $_SESSION["user"] = $_POST['email'];
+                $_SESSION["user"] = $data['user_id'];
                 $_SESSION['log'] = 'misiganes';
                 header('Location:index.php');
             }
