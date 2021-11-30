@@ -26,6 +26,31 @@ if(isset($_POST['login'])){
         
     }
 }
+
+if(isset($_POST['regi'])){
+    if(!empty($_POST['email']) && !empty($_POST['pass'])){
+        // проверяем, не сущестует ли пользователя с таким именем
+        $login = $_POST['email'];
+        $password = $_POST['pass'];
+        $query = mysqli_query($yhendus, "SELECT user_id FROM users WHERE emaile='".$login."' AND password ='".$password."'");
+        if(mysqli_num_rows($query) > 0)
+        {
+            echo '<script language="javascript">';
+            echo 'alert("Kasutaja on andmebaasis juba olemas")';
+            echo '</script>';
+        }
+        else{
+            $login = $_POST['email'];
+            $password = $_POST['pass'];
+
+            mysqli_query($yhendus,"INSERT INTO users SET emaile='".$login."', password='".$password."'");
+
+            echo '<script language="javascript">';
+            echo 'alert("'.$login.',  Olete edukalt registreerunud!!")';
+            echo '</script>';
+        }
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -47,8 +72,9 @@ if(isset($_POST['login'])){
                     <h1>Login</h1>
                     <p class="text-muted"> Please enter your login and password!</p> 
                     <input type="text" name="email" placeholder="Email"> 
-                    <input type="password" name="pass" placeholder="Password"> 
+                    <input type="password" name="pass" placeholder="Password">
                     <input type="submit" name="login" value="Login">
+                    <input type="submit" name="regi" value="Registrerimine">
                 </form>
             </div>
         </div>
