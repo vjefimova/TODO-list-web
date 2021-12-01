@@ -25,7 +25,6 @@ if(isset($_REQUEST["Add"])) {
 if(isset($_REQUEST["Delete"])) {
     $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=?");
     $kask->bind_param("i", $_REQUEST["Delete"]);
-    $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
 
@@ -67,7 +66,7 @@ if(isset($_REQUEST["edit"])) {
                         <div class="container searchCont col-md-10 ">
                              <div class="search "> <i class="fa fa-search"></i>
                                  <form action="">
-                                     <input type="text" class="form-control" placeholder="Search" name="inputsearch" value="<?php echo $searchvalue;?>">
+                                     <input type="text" class="form-control" placeholder="Search" name="inputsearch" value="<?=$searchvalue?>">
                                      <button type="submit" class="btn btn-primary">Search</button>
                                  </form>
                              </div>
