@@ -24,7 +24,7 @@ if(isset($_REQUEST["Add"])) {
 
 if(isset($_REQUEST["Delete"])) {
     $kask = $yhendus->prepare("DELETE FROM taskid WHERE id=?");
-    $kask->bind_param("i", $_REQUEST["Delete"], $user);
+    $kask->bind_param("i", $_REQUEST["Delete"]);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
 }
@@ -58,7 +58,7 @@ if(isset($_REQUEST["edit"])) {
                     <div class="card-body p-4 text-white" >
                         <p>Hello <?php echo  $_SESSION["user_name"] ?>!</p>
                         <form action="logout.php" method="post">
-                            <input type="submit" class="btn btn-dark" value="Logi valja" name="logout">
+                            <input type="submit" class="btn btn-dark" value="Log out" name="logout">
                         </form>
                         <div class="text-center pt-3 pb-2">
                             <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-todo-list/check1.png" alt="Check" width="60">
@@ -78,10 +78,10 @@ if(isset($_REQUEST["edit"])) {
                                     <table class="table text-white mb-0">
                                         <thead>
                                         <tr>
-                                            <th scope="col">Õppeaine</th>
+                                            <th scope="col">Subject</th>
                                             <th scope="col">Task</th>
                                             <th scope="col">Info</th>
-                                            <th scope="col">Tähtaeg</th>
+                                            <th scope="col">Deadline</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
@@ -99,20 +99,20 @@ if(isset($_REQUEST["edit"])) {
                                                                     <div class='row'>
                                                                     <input type='hidden' name='idEdit' value='$id'>
                                                                         <div class='form-group col-sm-3'>
-                                                                            <label for='oppeaine'>Õppeaine</label>
-                                                                            <input type='text' name='oppeaine' value=$oppeaine>
+                                                                            <label for='oppeaine'>Subject:</label>
+                                                                            <input type='text' name='oppeaine' value='$oppeaine'>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
                                                                             <label for='tooliik'>Task:</label>
-                                                                            <input type='text' name='tooliik' value=$tooliik>
+                                                                            <input type='text' name='tooliik' value='$tooliik'>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
                                                                             <label for='info'>Info:</label>
-                                                                            <input type='text' name='info' value=$task>
+                                                                            <input type='text' name='info' value='$task'>
                                                                         </div>
                                                                         <div class='form-group col-sm'>
-                                                                            <label for='tahtaeg'>Tähtaeg:</label>
-                                                                            <input type='date' name='tahtaeg' value=$tahtaeg>
+                                                                            <label for='tahtaeg'>Deadline::</label>
+                                                                            <input type='date' name='tahtaeg' value='$tahtaeg'>
                                                                         </div>
                                                                     </div>
                                                                     <div class='row'>
@@ -124,9 +124,9 @@ if(isset($_REQUEST["edit"])) {
                                                               </div>
                                                         ";
                                             }
-                                            if(isset($_REQUEST["inputsearch"])) {
+                                            if(!empty(isset($_REQUEST["inputsearch"]))) {
                                                 $input= $_REQUEST["inputsearch"];
-                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' || tahtaeg like '%$input%' || oppeaine like '%$input%' || task like '%$input%' and user = $user");
+                                                $data=$yhendus->prepare("select id, tahtaeg, oppeaine, tooliik, task from taskid where tooliik like '%$input%' and user = '$user' || tahtaeg like '%$input%' and user = '$user' || oppeaine like '%$input%' and user = '$user' || task like '%$input%' and user = '$user'");
                                                 $data->bind_result($id, $tahtaeg, $oppeaine, $tooliik, $task);
                                                 $data->execute();
                                             }
@@ -168,7 +168,7 @@ if(isset($_REQUEST["edit"])) {
                                             <input type="text" class="form-control" id="Input1" placeholder="task" name="task">
                                         </div>
                                         <div class="form-group">
-                                            <label for="Select1">Õppeaine</label>
+                                            <label for="Select1">Subject</label>
                                             <select class="form-control" id="Select1" name="oppeaine">
                                                 <option>Multimeedia</option>
                                                 <option>Programeerimine</option>
@@ -182,7 +182,7 @@ if(isset($_REQUEST["edit"])) {
                                             <textarea class="form-control" id="Textarea1" rows="3" placeholder="Info" name="tooliik"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="Textarea1">Tähtaeg</label>
+                                            <label for="Textarea1">Deadline</label>
                                             <div>
                                                 <input type="date" name="tahtaeg">
                                             </div>
