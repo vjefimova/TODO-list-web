@@ -72,10 +72,10 @@ if(isset($_POST['regi'])){
                 <form method="post" class="box">
                     <h1>Login</h1>
                     <p class="text-muted"> Please enter your login and password!</p> 
-                    <input type="text" name="email" placeholder="Email"> 
+                    <input type="text" name="email" placeholder="Login">
                     <input type="password" name="pass" placeholder="Password">
                     <input type="submit" name="login" value="Login">
-                    <input type="submit" name="regi" value="Registrerimine">
+                    <input type="submit" name="regi" value="Registration">
                 </form>
             </div>
         </div>
